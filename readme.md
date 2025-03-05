@@ -133,19 +133,8 @@ mongorestore --gzip --archive=/path/to/backup-file.gz --username your_user --pas
 ---
 
 ## 🔹 Google Drive Setup
-1. Create a Google Service Account:
-   - Go to Google Cloud Console.
-   - Create a new project.
-   - Navigate to IAM & Admin > Service Accounts.
-   - Click Create Service Account → Assign Editor role.
-   - Under Keys, generate a JSON Key and download it.
-   - Rename the file credentials.json and place it in the project root.
-
-
-2. Share Google Drive Folder:
-   - Create a Google Drive folder for backups.
-   - Copy the Folder ID from the URL and paste it in config.yml.
-   - Share the folder with your service account email.
+## 📖 Documentation
+- [Google Drive Setup](docs/google_drive_setup.md)
 
 ---
 
