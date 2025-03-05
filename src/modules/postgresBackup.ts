@@ -39,7 +39,14 @@ export async function runPostgresBackup(dbName: string): Promise<string> {
 
 export async function checkPostgresConnections() {
   console.log('🔍 Checking PostgreSQL connections...');
-  for (const dbName of Object.keys(config.databases.postgres)) {
+  const postgresDatabases = config.databases.postgres ?? {};
+
+  if (Object.keys(postgresDatabases).length === 0) {
+    console.warn('⚠️  No PostgreSQL databases found in config.yml.');
+    return;
+  }
+
+  for (const dbName of Object.keys(postgresDatabases)) {
     const { user, password, host, port, database } = config.databases.postgres[dbName];
 
     try {

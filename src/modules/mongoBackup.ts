@@ -68,7 +68,14 @@ export async function runMongoBackup(dbName: string): Promise<string> {
 export async function checkMongoConnections() {
   console.log('🔍 Checking MongoDB connections...');
 
-  for (const dbName of Object.keys(config.databases.mongodb)) {
+  const mongoDatabases = config.databases.mongodb ?? {};
+
+  if (Object.keys(mongoDatabases).length === 0) {
+    console.warn('⚠️  No MongoDB databases found in config.yml.');
+    return;
+  }
+
+  for (const dbName of Object.keys(mongoDatabases)) {
     const { user, password, host, port, database } = config.databases.mongodb[dbName];
 
     try {
