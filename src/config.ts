@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import yaml from 'yaml';
 
 // Define PostgreSQL & MongoDB database configuration structure
@@ -60,8 +61,14 @@ export type Config = {
 };
 
 // Load YAML config file
-const configFile = fs.readFileSync('config.yml', 'utf8');
-const config: Config = yaml.parse(configFile);
+const configPath = path.resolve(__dirname, '../config.yml');
+
+if (!fs.existsSync(configPath)) {
+  throw new Error(`❌ Config file not found: ${configPath}`);
+}
+
+const fileContent = fs.readFileSync(configPath, 'utf8');
+const config: Config = yaml.parse(fileContent);
 
 // Ensure required fields exist
 if (!config.databases) {
