@@ -65,38 +65,59 @@ export async function runMongoBackup(dbName: string): Promise<string> {
   });
 }
 
-export async function checkMongoConnections() {
+export async function checkMongoConnections(): Promise<boolean> {
   console.log('🔍 Checking MongoDB connections...');
 
   const mongoDatabases = config.databases.mongodb ?? {};
 
   if (Object.keys(mongoDatabases).length === 0) {
     console.warn('⚠️  No MongoDB databases found in config.yml.');
-    return;
+    return false;
   }
 
+  let allSuccessful = true;
+
   for (const dbName of Object.keys(mongoDatabases)) {
-    const { user, password, host, port, database } = config.databases.mongodb[dbName];
+    const { user, password, host, port, database } = mongoDatabases[dbName];
 
     try {
-      let command = `mongosh "mongodb://${host}:${port}" --quiet --eval "db.adminCommand({ listDatabases: 1 }).databases.map(db => db.name).join(',')"`;
+      let command = `mongosh "mongodb://${host}:${port}" --quiet --eval "db.adminCommand({ listDatabases: 1 })"`;
       if (user && password) {
-        command = `mongosh "mongodb://${user}:${password}@${host}:${port}" --quiet --eval "db.adminCommand({ listDatabases: 1 }).databases.map(db => db.name).join(',')"`;
+        command = `mongosh "mongodb://${user}:${password}@${host}:${port}" --quiet --eval "db.adminCommand({ listDatabases: 1 })"`;
       }
 
       const output = execSync(command, { encoding: 'utf8' }).trim();
-      const existingDatabases = output.split(',');
 
-      if (!existingDatabases.includes(database)) {
-        throw new Error(`Database "${database}" does not exist.`);
+      if (!output || output.includes('failed to connect') || output.includes('ECONNREFUSED')) {
+        console.error(`❌ Cannot connect to MongoDB server at ${host}:${port}`);
+        allSuccessful = false;
+        continue;
+      }
+
+      let databaseList: string[] = [];
+      try {
+        const parsedOutput = JSON.parse(output);
+        databaseList = parsedOutput.databases.map((db: { name: string }) => db.name);
+      } catch {
+        console.error(`❌ Unexpected MongoDB response for ${dbName}: ${output}`);
+        allSuccessful = false;
+        continue;
+      }
+
+      if (!databaseList.includes(database)) {
+        console.error(`❌ Database "${database}" does not exist.`);
+        allSuccessful = false;
+        continue;
       }
 
       console.log(`✅ MongoDB database exists: ${dbName} (${database})`);
     } catch (error) {
-      const message = (error as Error).message;
       console.error(
-        `❌ MongoDB connection failed for database ${dbName} (${database}): ${message}`,
+        `❌ MongoDB connection failed for ${dbName} (${database}): ${(error as Error).message}`,
       );
+      allSuccessful = false;
     }
   }
+
+  return allSuccessful;
 }
