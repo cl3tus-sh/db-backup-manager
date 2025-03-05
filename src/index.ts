@@ -23,8 +23,9 @@ async function main() {
         await deleteOldBackups(file);
         console.log(`✅ PostgreSQL backup completed: ${dbName}`);
         backupResults.push({ name: dbName, engine: 'PostgreSQL', status: '✅ Success' });
-      } catch {
+      } catch (error) {
         console.error(`❌ PostgreSQL backup failed: ${dbName}`);
+        console.error(error);
         backupResults.push({ name: dbName, engine: 'PostgreSQL', status: '❌ Failed' });
         overallSuccess = false;
       }
@@ -42,8 +43,9 @@ async function main() {
         await deleteOldBackups(file);
         console.log(`✅ MongoDB backup completed: ${dbName}`);
         backupResults.push({ name: dbName, engine: 'MongoDB', status: '✅ Success' });
-      } catch {
+      } catch (error) {
         console.error(`❌ MongoDB backup failed: ${dbName}`);
+        console.error(error);
         backupResults.push({ name: dbName, engine: 'MongoDB', status: '❌ Failed' });
         overallSuccess = false;
       }

@@ -5,7 +5,6 @@ import { config } from '../config';
 
 export async function deleteOldBackups(backupPath: string): Promise<void> {
   if (!config.retention.delete_old) return;
-  console.log('>>> ℹ️ deleteOldBackups.ts - 7', {});
 
   const files = fs.readdirSync(backupPath);
   const now = Date.now();
