@@ -3,8 +3,6 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-// Ensure passwords are URL-safe
-
 import { config } from '../config';
 
 export async function runMongoBackup(dbName: string): Promise<string> {
@@ -19,7 +17,6 @@ export async function runMongoBackup(dbName: string): Promise<string> {
   const backupFileName = `backup-${database}-${timestamp}.gz`;
   const backupFilePath = path.join(backup_path, backupFileName);
 
-  // Build the command dynamically, avoiding empty username/password
   const args = [
     '--host',
     host,
@@ -28,22 +25,27 @@ export async function runMongoBackup(dbName: string): Promise<string> {
     '--db',
     database,
     '--gzip',
-    '--archive=' + backupFilePath,
+    `--archive=${backupFilePath}`,
   ];
 
-  if (user) args.push('--username', user);
-  if (password) args.push('--password', password);
+  // Ensure proper authentication
+  if (user && password) {
+    const encodedPassword = encodeURIComponent(password); // Properly encode password
+    args.push('--username', user);
+    args.push('--password', encodedPassword);
+    args.push('--authenticationDatabase', 'admin'); // Ensure we authenticate in the admin database
+  }
 
   console.log(`📌 Backing up MongoDB database: ${database} -> ${backupFilePath}`);
 
   return new Promise((resolve, reject) => {
     const process = spawn('mongodump', args);
-    let errorMessage = '';
 
+    let errorMessage = '';
     const timeout = setTimeout(() => {
       process.kill();
       reject(new Error(`MongoDB backup timed out for database: ${database}`));
-    }, 5_000); // 30 seconds timeout
+    }, 30_000); // 30 seconds timeout
 
     process.stdout.on('data', (data) => console.log(`[mongodump]: ${data}`));
     process.stderr.on('data', (data) => {
@@ -63,7 +65,7 @@ export async function runMongoBackup(dbName: string): Promise<string> {
 
     process.on('error', (err) => {
       clearTimeout(timeout);
-      reject(new Error(`MongoDB backup error: ${err.message}`));
+      reject(new Error(`MongoDB backup process error: ${err.message}`));
     });
   });
 }
