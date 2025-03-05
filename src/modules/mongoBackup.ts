@@ -2,6 +2,8 @@ import { execSync, spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
+// Ensure passwords are URL-safe
+
 import { config } from '../config';
 
 export async function runMongoBackup(dbName: string): Promise<string> {
@@ -69,7 +71,6 @@ export async function checkMongoConnections(): Promise<boolean> {
   console.log('🔍 Checking MongoDB connections...');
 
   const mongoDatabases = config.databases.mongodb ?? {};
-
   if (Object.keys(mongoDatabases).length === 0) {
     console.warn('⚠️  No MongoDB databases found in config.yml.');
     return false;
@@ -81,10 +82,9 @@ export async function checkMongoConnections(): Promise<boolean> {
     const { user, password, host, port, database } = mongoDatabases[dbName];
 
     try {
-      let command = `mongosh "mongodb://${host}:${port}" --quiet --eval "db.adminCommand({ listDatabases: 1 })"`;
-      if (user && password) {
-        command = `mongosh "mongodb://${user}:${password}@${host}:${port}" --quiet --eval "db.adminCommand({ listDatabases: 1 })"`;
-      }
+      let encodedPassword = password ? encodeURIComponent(password) : '';
+      let authPart = user && password ? `${user}:${encodedPassword}@` : '';
+      let command = `mongosh "mongodb://${authPart}${host}:${port}" --quiet --eval "db.adminCommand({ listDatabases: 1 })"`;
 
       const output = execSync(command, { encoding: 'utf8' }).trim();
 
