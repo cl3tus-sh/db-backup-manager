@@ -20,7 +20,7 @@ async function main() {
         const file = await runPostgresBackup(dbName);
         await sendToRemote(file);
         await uploadToGoogleDrive(file);
-        await deleteOldBackups(file);
+        await deleteOldBackups(dbName);
         console.log(`✅ PostgreSQL backup completed: ${dbName}`);
         backupResults.push({ name: dbName, engine: 'PostgreSQL', status: '✅ Success' });
       } catch (error) {
@@ -40,7 +40,7 @@ async function main() {
         const file = await runMongoBackup(dbName);
         await sendToRemote(file);
         await uploadToGoogleDrive(file);
-        await deleteOldBackups(file);
+        await deleteOldBackups(dbName);
         console.log(`✅ MongoDB backup completed: ${dbName}`);
         backupResults.push({ name: dbName, engine: 'MongoDB', status: '✅ Success' });
       } catch (error) {
