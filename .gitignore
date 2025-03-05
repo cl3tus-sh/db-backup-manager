@@ -1,0 +1,8 @@
+node_modules/
+dist/
+backups/
+credentials.json
+config.yml
+
+.DS_Store
+.idea

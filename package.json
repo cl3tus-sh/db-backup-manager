@@ -1,0 +1,48 @@
+{
+  "name": "db-backup-manager",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "lint": "npx tsc --noEmit && eslint .",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "setup-cron": "node dist/setupCron.js",
+    "check-config": "ts-node src/checkConfig.ts",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "backup",
+    "postgres",
+    "mongodb",
+    "google-drive",
+    "cron",
+    "database"
+  ],
+  "author": "",
+  "license": "MIT",
+  "description": "Automated backup system for PostgreSQL and MongoDB with Google Drive and remote storage support.",
+  "dependencies": {
+    "axios": "1.8.1",
+    "child_process": "1.0.2",
+    "dotenv": "16.4.7",
+    "fs": "0.0.1-security",
+    "googleapis": "146.0.0",
+    "util": "0.12.5",
+    "yaml": "2.7.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "@eslint/js": "^9.21.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "22.13.9",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
+    "eslint": "^9.21.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.3",
+    "typescript": "5.8.2"
+  }
+}

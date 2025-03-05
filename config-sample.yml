@@ -1,0 +1,42 @@
+remote_server:
+  enabled: false
+  host: "your.remote.server.com"
+  user: "your_ssh_user"
+  path: "/remote/backup/path"
+  password: "your_ssh_password"
+  method: "rsync" # Options: "rsync" or "scp"
+
+google_drive:
+  enabled: false
+  folder_id: "your-google-drive-folder-id"
+
+discord:
+  enabled: false
+  webhook_url: "your-discord-webhook-url"
+
+cron:
+  enabled: false
+  schedule: "daily" # Options: "daily", "weekly", "monthly"
+
+retention:
+  delete_old: false
+  keep_days: 30 # Number of days before backups are deleted
+
+databases:
+  postgres:
+    main:
+      user: "your_main_user"
+      password: "your_main_password"
+      host: "localhost"
+      port: 5432
+      database: "main_database"
+      backup_path: "./backups/postgres"
+
+  mongodb:
+    main:
+      user: "your_mongo_user"
+      password: "your_mongo_password"
+      host: "localhost"
+      port: 27017
+      database: "my_mongo_db"
+      backup_path: "./backups/mongodb"
