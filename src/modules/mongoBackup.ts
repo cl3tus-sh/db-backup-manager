@@ -1,4 +1,5 @@
-import { execSync, spawn } from 'child_process';
+import { spawn } from 'child_process';
+import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
@@ -84,25 +85,31 @@ export async function checkMongoConnections(): Promise<boolean> {
     try {
       let encodedPassword = password ? encodeURIComponent(password) : '';
       let authPart = user && password ? `${user}:${encodedPassword}@` : '';
-      let command = `mongosh "mongodb://${authPart}${host}:${port}" --quiet --eval "db.adminCommand({ listDatabases: 1 })"`;
+      let command = `mongosh "mongodb://${authPart}${host}:${port}/?authSource=admin" --quiet --eval "JSON.stringify(db.adminCommand({ listDatabases: 1 }))"`;
 
       const output = execSync(command, { encoding: 'utf8' }).trim();
 
-      if (!output || output.includes('failed to connect') || output.includes('ECONNREFUSED')) {
-        console.error(`❌ Cannot connect to MongoDB server at ${host}:${port}`);
-        allSuccessful = false;
-        continue;
-      }
-
-      let databaseList: string[] = [];
+      // Convert output to a valid JSON object
+      let parsedOutput: { databases: { name: string }[] };
       try {
-        const parsedOutput = JSON.parse(output);
-        databaseList = parsedOutput.databases.map((db: { name: string }) => db.name);
+        parsedOutput = JSON.parse(output);
       } catch {
         console.error(`❌ Unexpected MongoDB response for ${dbName}: ${output}`);
         allSuccessful = false;
         continue;
       }
+
+      // Ensure the response contains a valid list of databases
+      if (!parsedOutput.databases || !Array.isArray(parsedOutput.databases)) {
+        console.error(
+          `❌ Invalid MongoDB response format for ${dbName}: ${JSON.stringify(parsedOutput)}`,
+        );
+        allSuccessful = false;
+        continue;
+      }
+
+      // Extract database names correctly
+      const databaseList = parsedOutput.databases.map((db: { name: string }) => db.name);
 
       if (!databaseList.includes(database)) {
         console.error(`❌ Database "${database}" does not exist.`);
