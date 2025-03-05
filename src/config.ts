@@ -37,6 +37,7 @@ export type DiscordConfig = {
 export type CronConfig = {
   enabled: boolean;
   schedule: 'daily' | 'weekly' | 'monthly';
+  log_path?: string;
 };
 
 // Define Retention Policy configuration
