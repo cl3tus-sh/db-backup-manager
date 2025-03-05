@@ -55,11 +55,11 @@ discord:
 cron:
     enabled: false
     schedule: "daily" # Options: "daily", "weekly", "monthly"
+    log_path: "./logs"
 
 retention:
     delete_old: false
     keep_days: 30 # Number of days before backups are deleted
-    log_path: "./logs"
 
 databases:
     postgres:

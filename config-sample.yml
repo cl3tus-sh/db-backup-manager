@@ -17,6 +17,7 @@ discord:
 cron:
   enabled: false
   schedule: "daily" # Options: "daily", "weekly", "monthly"
+  log_path: "./logs"
 
 retention:
   delete_old: false
