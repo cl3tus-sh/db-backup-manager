@@ -4,7 +4,11 @@ import path from 'path';
 
 import { config } from '../config';
 
-const credentialsPath = path.resolve(__dirname, '../credentials.json');
+const isDev = __dirname.includes('src');
+
+const credentialsPath = isDev
+  ? path.resolve(__dirname, '../credentials.json')
+  : path.resolve(__dirname, '../../credentials.json');
 
 const auth = new google.auth.GoogleAuth({
   keyFile: credentialsPath,
