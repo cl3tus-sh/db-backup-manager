@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "DEV_MODE=true ts-node src/index.ts",
+    "dev": "ts-node src/index.ts",
     "lint": "npx tsc --noEmit && eslint .",
     "build": "tsc",
     "start": "node dist/index.js",
     "setup-cron": "node dist/setupCron.js",
-    "check-config": "DEV_MODE=true ts-node src/checkConfig.ts",
+    "check-config": "ts-node src/checkConfig.ts",
     "prepare": "husky"
   },
   "keywords": [
