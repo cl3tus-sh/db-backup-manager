@@ -4,7 +4,7 @@ import path from 'path';
 
 import { config } from '../config';
 
-const isDev = __dirname.includes('src');
+const isDev = process.env.DEV_MODE === 'true';
 
 const credentialsPath = isDev
   ? path.resolve(__dirname, '../credentials.json')
