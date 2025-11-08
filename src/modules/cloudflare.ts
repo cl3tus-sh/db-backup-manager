@@ -4,16 +4,10 @@ import path from 'path';
 
 import { config } from '../config';
 
-const credentialsPath = path.resolve(__dirname, '../../credentials.json');
-
 export async function checkCloudflare() {
   console.log('🔍 Checking Cloudflare configuration...');
 
   if (!config.cloudflare_r2.enabled) return;
-
-  if (!fs.existsSync(credentialsPath)) {
-    throw new Error(`❌ Cloudflare R2 credentials file not found: ${credentialsPath}`);
-  }
 
   const {
     access_key_id,
@@ -49,10 +43,6 @@ export async function checkCloudflare() {
 
 export async function uploadToCloudflareR2(filePath: string): Promise<void> {
   if (!config.cloudflare_r2.enabled) return;
-
-  if (!fs.existsSync(credentialsPath)) {
-    throw new Error(`❌ Cloudflare R2 credentials file not found: ${credentialsPath}`);
-  }
 
   const {
     access_key_id,
