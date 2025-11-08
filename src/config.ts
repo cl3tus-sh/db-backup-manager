@@ -60,7 +60,7 @@ export type CloudflareR2Config = {
 export type Config = {
   remote_server: RemoteServerConfig;
   google_drive: GoogleDriveConfig;
-  cloudflareR2: CloudflareR2Config;
+  cloudflare_r2: CloudflareR2Config;
   discord: DiscordConfig;
   cron: CronConfig;
   retention: RetentionConfig;

@@ -9,7 +9,7 @@ const credentialsPath = path.resolve(__dirname, '../../credentials.json');
 export async function checkCloudflare() {
   console.log('🔍 Checking Cloudflare configuration...');
 
-  if (!config.cloudflareR2.enabled) return;
+  if (!config.cloudflare_r2.enabled) return;
 
   if (!fs.existsSync(credentialsPath)) {
     throw new Error(`❌ Cloudflare R2 credentials file not found: ${credentialsPath}`);
@@ -21,7 +21,7 @@ export async function checkCloudflare() {
     secret_access_key,
     bucket_name,
     region = 'auto',
-  } = config.cloudflareR2;
+  } = config.cloudflare_r2;
 
   if (!access_key_id || !secret_access_key || !bucket_name || !region) {
     throw new Error('❌ Cloudflare R2 configuration is incomplete in config.yml.');
@@ -48,7 +48,7 @@ export async function checkCloudflare() {
 }
 
 export async function uploadToCloudflareR2(filePath: string): Promise<void> {
-  if (!config.cloudflareR2.enabled) return;
+  if (!config.cloudflare_r2.enabled) return;
 
   if (!fs.existsSync(credentialsPath)) {
     throw new Error(`❌ Cloudflare R2 credentials file not found: ${credentialsPath}`);
@@ -60,7 +60,7 @@ export async function uploadToCloudflareR2(filePath: string): Promise<void> {
     secret_access_key,
     bucket_name,
     region = 'auto',
-  } = config.cloudflareR2;
+  } = config.cloudflare_r2;
 
   const endpoint = `https://${account_id}.r2.cloudflarestorage.com`;
 

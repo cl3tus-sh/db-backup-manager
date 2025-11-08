@@ -10,13 +10,13 @@ google_drive:
   enabled: false
   folder_id: "your-google-drive-folder-id"
 
-cloudflare:
+cloudflare_r2:
   enabled: false
-  account_id: 'your-cloudflare-account-id';
-  access_key_id: 'your-cloudflare-access-key-id';
-  secret_access_key: 'your-cloudflare-secret-access-key';
-  bucket_name: 'your-cloudflare-bucket-name';
-  region: 'your-cloudflare-region'; # e.g., 'auto'
+  account_id: 'your-cloudflare-account-id'
+  access_key_id: 'your-cloudflare-access-key-id'
+  secret_access_key: 'your-cloudflare-secret-access-key'
+  bucket_name: 'your-cloudflare-bucket-name'
+  region: 'your-cloudflare-region' # e.g., 'auto'
 
 discord:
   enabled: false
