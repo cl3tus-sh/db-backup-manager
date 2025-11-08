@@ -47,10 +47,20 @@ export type RetentionConfig = {
   keep_days: number;
 };
 
+export type CloudflareR2Config = {
+  enabled: boolean;
+  account_id: string;
+  access_key_id: string;
+  secret_access_key: string;
+  bucket_name: string;
+  region: string;
+}
+
 // Define full configuration structure
 export type Config = {
   remote_server: RemoteServerConfig;
   google_drive: GoogleDriveConfig;
+  cloudflareR2: CloudflareR2Config;
   discord: DiscordConfig;
   cron: CronConfig;
   retention: RetentionConfig;

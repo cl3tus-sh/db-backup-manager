@@ -5,6 +5,7 @@ import { uploadToGoogleDrive } from './modules/googleDrive';
 import { runMongoBackup } from './modules/mongoBackup';
 import { runPostgresBackup } from './modules/postgresBackup';
 import { sendToRemote } from './modules/transfer';
+import { uploadToCloudflareR2 } from './modules/cloudflare';
 
 async function main() {
   console.log('🚀 Starting database backups...');
@@ -20,6 +21,7 @@ async function main() {
         const file = await runPostgresBackup(dbName);
         await sendToRemote(file);
         await uploadToGoogleDrive(file);
+        await uploadToCloudflareR2(file)
         await deleteOldBackups(dbName);
         console.log(`✅ PostgreSQL backup completed: ${dbName}`);
         backupResults.push({ name: dbName, engine: 'PostgreSQL', status: '✅ Success' });
@@ -40,6 +42,7 @@ async function main() {
         const file = await runMongoBackup(dbName);
         await sendToRemote(file);
         await uploadToGoogleDrive(file);
+        await uploadToCloudflareR2(file);
         await deleteOldBackups(dbName);
         console.log(`✅ MongoDB backup completed: ${dbName}`);
         backupResults.push({ name: dbName, engine: 'MongoDB', status: '✅ Success' });
