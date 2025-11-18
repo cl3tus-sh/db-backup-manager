@@ -54,7 +54,7 @@ export type CloudflareR2Config = {
   secret_access_key: string;
   bucket_name: string;
   region: string;
-}
+};
 
 // Define full configuration structure
 export type Config = {

@@ -5,6 +5,7 @@ A TypeScript-based automated backup system for PostgreSQL & MongoDB with:
 ## 📌 Features
 - 📡 Multi-Database Support → PostgreSQL & MongoDB
 - ☁️ Google Drive Integration → Cloud backups via Service Account
+- 🪣 Cloudflare R2 Support → S3-compatible storage
 - 📤 Remote Server Transfer → Supports scp & rsync
 - 🔔 Discord Alerts → Backup status notifications
 - 🗑 Retention Policy → Auto-delete old backups
@@ -47,6 +48,14 @@ remote_server:
 google_drive:
     enabled: false
     folder_id: "your-google-drive-folder-id"
+    
+cloudflare_r2:
+    enabled: false
+    account_id: "your-cloudflare-account-id"
+    access_key_id: "your-cloudflare-access-key-id"
+    secret_access_key: "your-cloudflare-secret-access-key"
+    bucket_name: "your-cloudflare-bucket-name"
+    region: "your-cloudflare-region" # e.g., 'auto'
 
 discord:
     enabled: false
@@ -94,6 +103,7 @@ npm run check-config
 - ✔ Database credentials & connection (PostgreSQL & MongoDB).
 - ✔ Remote server access (via SSH).
 - ✔ Google Drive API access.
+- ✔ Cloudflare R2 connectivity.
 - ✔ Discord webhook connectivity.
 
 If an issue is found, the script explains why.

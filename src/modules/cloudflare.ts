@@ -17,7 +17,7 @@ export async function checkCloudflare() {
     region = 'auto',
   } = config.cloudflare_r2;
 
-  if (!access_key_id || !secret_access_key || !bucket_name || !region) {
+  if (!access_key_id || !secret_access_key || !bucket_name || !region || !account_id) {
     throw new Error('❌ Cloudflare R2 configuration is incomplete in config.yml.');
   }
 
@@ -69,7 +69,7 @@ export async function uploadToCloudflareR2(filePath: string): Promise<void> {
     Bucket: bucket_name,
     Key: path.basename(filePath),
     Body: fileStream,
-    mimeType: 'application/sql',
+    ContentType: 'application/sql',
   };
 
   await s3.send(new PutObjectCommand(uploadParams));
