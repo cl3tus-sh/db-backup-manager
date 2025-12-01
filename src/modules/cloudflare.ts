@@ -63,7 +63,15 @@ export async function uploadToCloudflareR2(filePath: string): Promise<void> {
     },
   });
 
-  const fileStream = fs.createReadStream(filePath);
+  let fileStream;
+
+  try {
+    fileStream = fs.createReadStream(filePath);
+  } catch (err) {
+    console.error(`❌ Failed to read file "${filePath}":`);
+    console.error(err);
+    return;
+  }
 
   const uploadParams = {
     Bucket: bucket_name,
@@ -72,5 +80,11 @@ export async function uploadToCloudflareR2(filePath: string): Promise<void> {
     ContentType: 'application/sql',
   };
 
-  await s3.send(new PutObjectCommand(uploadParams));
+  try {
+    await s3.send(new PutObjectCommand(uploadParams));
+    console.log(`✅ Successfully uploaded "${path.basename(filePath)}" to Cloudflare R2 bucket "${bucket_name}".`);
+  } catch (err) {
+    console.error(`❌ Failed to upload "${path.basename(filePath)}" to Cloudflare R2 bucket "${bucket_name}":`);
+    console.error(err);
+  }
 }
